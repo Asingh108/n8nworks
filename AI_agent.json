@@ -1,0 +1,186 @@
+{
+  "name": "AI agent",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -380,
+        -20
+      ],
+      "id": "eef45321-326c-4ecb-9cb6-fb548afc7091",
+      "name": "When chat message received",
+      "webhookId": "adb5b822-0376-487b-9cfc-71617cc8d623"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -160,
+        -20
+      ],
+      "id": "cea80e2a-953a-4265-8ccc-c31b6b169ab7",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        220
+      ],
+      "id": "8daa54e0-c031-470e-828a-23dea7f7d26b",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "ftturQjSdl4goVWI",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -120,
+        220
+      ],
+      "id": "246064fa-eab5-40a6-9452-4bde6be79677",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        100,
+        220
+      ],
+      "id": "58aeb65f-91c4-493a-a1d3-cea3c7ef6fa5",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        220
+      ],
+      "id": "ad18b6c6-677e-42a0-95c6-538f68e2ea4c",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "name": "WeatherTool",
+        "description": "Use this tool to get current weather update data for specific city.\nInput should be the name of the city.",
+        "workflowId": {
+          "__rl": true,
+          "value": "hSisRnyXaUxuVImM",
+          "mode": "list",
+          "cachedResultName": "Weatherton"
+        },
+        "specifyInputSchema": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        260,
+        220
+      ],
+      "id": "74511b94-135d-4ad7-891a-a40a2c571921",
+      "name": "Call n8n Workflow Tool"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d4e6dedf-c7dc-4f67-8891-918342adb54c",
+  "meta": {
+    "instanceId": "995b267343d55a0062fe3049bc70be4944bebcb9b4ea24284ac22d6e02acb58e"
+  },
+  "id": "FG54uN4EX4CN5isL",
+  "tags": []
+}

@@ -1,0 +1,208 @@
+{
+  "name": "Weatherton",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        0
+      ],
+      "id": "95d4af44-e7e2-41ba-8ff3-6f6ffddcd98b",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f2756df1-c7c5-4c4b-81d5-490ccdb18aa2",
+              "name": "Query",
+              "value": "Chandigarh",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -40,
+        0
+      ],
+      "id": "58ab3275-c837-4557-96b0-8725ba5f13e1",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "cityName": "={{ $json.Query }}"
+      },
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        180,
+        0
+      ],
+      "id": "950bdfa9-5e10-48d0-ac8c-016d09163ef8",
+      "name": "OpenWeatherMap",
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "wOd79YhykE1bdki5",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "please convert OpenWeatherMap input into a Palin English tone wit using relevant emojis and friendly tone.\nHere the data is:\n\n\"speed\": \n1.77,\n\"deg\": \n221,\n\"gust\": \n0.99\n},\n\"clouds\": \n{\n\"all\": \n0\n},\n\"dt\": \n1734330058,\n\"sys\": \n{\n\"country\": \n\"IN\",\n\"sunrise\": \n1734313418,\n\"sunset\": \n1734350009\n},\n\"timezone\": \n19800,\n\"id\": \n1274746,\n\"name\": \n\"Chandigarh\",\n\"cod\": \n200\n}\n]",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        360,
+        0
+      ],
+      "id": "b173fd26-6ff9-4779-94e3-5497fd31ec12",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        340,
+        180
+      ],
+      "id": "0e22a71f-bc6e-4097-a07c-39cc82f0a39a",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "ftturQjSdl4goVWI",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"response\": \"string\",\n\t\"location\": \"string\",\n    \"text\": \"string\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        180
+      ],
+      "id": "3d50e1a3-fb59-4d6f-ad2f-117f7f24e675",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6d289392-9132-46d0-998c-d0ebe559e03b",
+              "name": "Response",
+              "value": "={{ $json.output.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        0
+      ],
+      "id": "341e29af-192e-43af-bad0-5a5fccd19db5",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6549f785-24df-430d-9970-a41278cdcf1a",
+  "meta": {
+    "instanceId": "995b267343d55a0062fe3049bc70be4944bebcb9b4ea24284ac22d6e02acb58e"
+  },
+  "id": "hSisRnyXaUxuVImM",
+  "tags": []
+}
